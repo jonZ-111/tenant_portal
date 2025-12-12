@@ -18,18 +18,37 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Payment.init({
-    leaseId: DataTypes.INTEGER,
-    amount: DataTypes.DECIMAL(10, 2),
-    paymentDate: DataTypes.DATE,
-    method: DataTypes.STRING,
-    status: {
-      type: DataTypes.ENUM('pending', 'paid', 'late', 'failed'),
-      defaultValue: 'pending'
-    },
-    reference: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'Payment',
-  });
+      leaseId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      paymentDate: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+      },
+      amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+      },
+      method: {
+        type: DataTypes.ENUM("cash", "card", "transfer", "other"),
+        allowNull: false,
+        defaultValue: "cash"
+      },
+      status: {
+        type: DataTypes.ENUM('pending', 'paid', 'late', 'failed'),
+        defaultValue: 'pending'
+      },
+      notes: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      }
+    }, {
+      sequelize,
+      modelName: 'Payment',
+      tableName: 'Payments'
+    }
+  );
+
   return Payment;
 };

@@ -13,21 +13,60 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Lease.belongsTo(models.Tenant, {
         foreignKey: 'tenantId',
+        as: 'tenant',
         onDelete: 'CASCADE'
       });
+
+      Lease.hasMany(models.Payment, {
+        foreignKey: 'leaseId',
+        as:'payments',
+        onDelete: 'CASCADE',
+      })
     }
   }
+
   Lease.init({
-    tenantId: DataTypes.INTEGER,
-    unit: DataTypes.STRING,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
-    rentAmount: DataTypes.DECIMAL,
-    rentDueDate: DataTypes.INTEGER,
-    status: DataTypes.STRING
+    tenantId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    unit: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    startDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    endDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    rentAmount: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false
+    },
+    rentDueDate: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    depositAmount: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM("pending", "active", "ended"),
+      allowNull: false,
+      defaultValue: "pending"
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    } 
   }, {
     sequelize,
     modelName: 'Lease',
+    tableName: 'Leases'
   });
   
   return Lease;

@@ -1,8 +1,8 @@
 "use strict";
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Tenants", {
+    await queryInterface.createTable("MaintenanceTickets", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,46 +10,38 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
 
-      userId: {
+      tenantId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: "Users",
+          model: "Tenants",
           key: "id",
         },
-        onDelete: "CASCADE",
         onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
 
-      firstName: {
-        type: Sequelize.STRING,
+      category: {
+        type: Sequelize.ENUM("plumbing", "electrical", "appliance", "general"),
         allowNull: false,
+        defaultValue: "general",
       },
 
-      lastName: {
-        type: Sequelize.STRING,
+      description: {
+        type: Sequelize.TEXT,
         allowNull: false,
-      },
-
-      email: {
-        type: Sequelize.STRING,
-        allowNull: true, // Contact email, not login email
-      },
-
-      phone: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-
-      unitNumber: {
-        type: Sequelize.STRING,
-        allowNull: true,
       },
 
       status: {
-        type: Sequelize.ENUM("active", "inactive"),
+        type: Sequelize.ENUM("open", "in-progress", "closed"),
         allowNull: false,
-        defaultValue: "active",
+        defaultValue: "open",
+      },
+
+      priority: {
+        type: Sequelize.ENUM("low", "medium", "high"),
+        allowNull: false,
+        defaultValue: "medium",
       },
 
       createdAt: {
@@ -67,6 +59,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Tenants");
+    await queryInterface.dropTable("MaintenanceTickets");
   }
 };
+

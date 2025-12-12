@@ -16,7 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const authRoutes = require('./routes/auth');
+const userRoutes = require("./routes/users");
 app.use('/auth', authRoutes);
+app.use("/dashboard", require("./routes/dashboard"));
+app.use("/api/users", userRoutes);
+
 
 app.get("/", (req, res) => {
     res.json({ message: "Server is Up"});
