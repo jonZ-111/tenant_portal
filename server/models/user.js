@@ -4,38 +4,58 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       User.hasOne(models.Tenant, {
         foreignKey: 'userId',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       });
     }
   }
 
-  User.init({
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: { isEmail: true }
-    } ,
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
+  User.init(
+    {
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: { isEmail: true },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tempPassword: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      mustChangePassword: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+      passwordChangedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      role: {
+        type: DataTypes.ENUM("admin", "tenant"),
+        defaultValue: "tenant",
+      },
     },
-    role:{
-      type: DataTypes.ENUM('admin', 'tenant'),
-      defaultValue: 'tenant'
+    {
+      sequelize,
+      modelName: "User",
+
+      // 🔑 IMPORTANT PART
+      defaultScope: {
+        attributes: { exclude: ["password", "tempPassword"] },
+      },
+      scopes: {
+        withSecrets: {
+          attributes: { include: ["password", "tempPassword"] },
+        },
+      },
     }
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
-  
+  );
+
   return User;
 };

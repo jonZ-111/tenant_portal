@@ -23,20 +23,23 @@ module.exports = {
         return res.status(400).json({ message: 'User already exists' });
       }
 
-      const rawPassword = password || generateTempPassword();
+      const rawPassword = password || generateTempPassword(); //set password to force change after first login before deployment.
       const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
-      // 1️⃣ Create User
+      //Create User
       const user = await User.create(
         {
           email,
           password: hashedPassword,
           role,
+          tempPassword: rawPassword,       
+          mustChangePassword: true,          
+          passwordChangedAt: null, 
         },
         { transaction }
       );
 
-      // 2️⃣ Create role-based profile
+      // Create role-based profile
       let roleProfile = null;
 
       if (role === 'tenant') {
@@ -52,7 +55,7 @@ module.exports = {
         );
       }
 
-      // Add before deployment
+      // phase 2 additions.
       // if (role === 'staff') { ... }
       // if (role === 'admin') { ... }
 

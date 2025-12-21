@@ -1,3 +1,4 @@
+//switch to a config.js file to apply a modern dotenv-based
 require("dotenv").config();
 
 module.exports = {

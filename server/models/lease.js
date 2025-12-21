@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
-    rentDueDate: {
+    rentDueDay: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -61,6 +61,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     isActive: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: true,
     } 
   }, {
