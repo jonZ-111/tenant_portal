@@ -1,0 +1,110 @@
+:root {
+  --primary-blue: #0d6efd;
+  --light-blue: #f4f8ff;
+  --border-gray: #e5e7eb;
+  --text-dark: #1f2937;
+}
+/* ---------- GLOBAL RESET ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  background-color: #f4f6f8;
+  color: #1f2933;
+  line-height: 1.5;
+}
+
+/* ---------- GLOBAL CONTAINERS ---------- */
+.page-container {
+  padding: 24px;
+}
+
+/* ---------- HEADINGS ---------- */
+h1 {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+/* ---------- CARDS ---------- */
+.card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- BUTTONS ---------- */
+button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button.primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+button.primary:hover {
+  background-color: #1d4ed8;
+}
+
+button.danger {
+  background-color: #dc2626;
+  color: white;
+}
+
+button.danger:hover {
+  background-color: #b91c1c;
+}
+
+/* ---------- STATUS TAGS ---------- */
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status.active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+}
+
+.btn-outline-secondary {
+  font-weight: 500;
+}

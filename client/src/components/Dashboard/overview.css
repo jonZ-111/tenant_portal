@@ -1,0 +1,53 @@
+/* Dashboard container spacing */
+.container-fluid {
+  padding: 24px;
+}
+
+/* Page title */
+.container-fluid h2 {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Card base styling */
+.card {
+  border-radius: 12px;
+  border: none;
+  background: #ffffff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect */
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Card titles */
+.card h5 {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Card numbers */
+.card h2 {
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+/* Payments highlight stays green */
+.text-success {
+  color: #198754 !important;
+}
+
+/* Mobile spacing */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+  }
+
+  .card h2 {
+    font-size: 1.6rem;
+  }
+}
