@@ -3,8 +3,8 @@ const router = express.Router();
 const { Lease, Tenant } = require("../models");
 const authMiddleware = require("../middleware/authMiddleware");
 
-// GET /api/leases
-router.get("/", async (req, res) => {
+// GET /api/leases (ADMIN)
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const leases = await Lease.findAll({
       include: {
@@ -13,14 +13,51 @@ router.get("/", async (req, res) => {
         attributes: ["id", "firstName", "lastName", "email"],
       },
     });
+
     res.json(leases);
   } catch (err) {
     console.error("Fetch leases error:", err);
-    res.status(500).json({ error: "Failed to fetch leases" });
+    res.status(500).json({ message: "Failed to fetch leases" });
   }
 });
 
-// GET /api/leases/my
+// POST /api/leases (ADMIN)
+router.post("/", authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    const {
+      tenantId,
+      unitNumber,
+      startDate,
+      endDate,
+      rentAmount,
+      depositAmount,
+      rentDueDay,
+    } = req.body;
+
+    const lease = await Lease.create({
+      tenantId,
+      unit: unitNumber, // DB column is `unit`
+      startDate,
+      endDate,
+      rentAmount,
+      depositAmount,
+      rentDueDay,
+      status: "pending",
+      isActive: false,
+    });
+
+    res.status(201).json(lease);
+  } catch (err) {
+    console.error("Create lease error:", err);
+    res.status(500).json({ message: "Failed to create lease" });
+  }
+});
+
+// GET /api/leases/my (TENANT)
 router.get("/my", authMiddleware, async (req, res) => {
   try {
     const tenant = await Tenant.findOne({
@@ -42,11 +79,11 @@ router.get("/my", authMiddleware, async (req, res) => {
     res.json(lease);
   } catch (err) {
     console.error("Fetch tenant lease error:", err);
-    res.status(500).json({ error: "Failed to fetch lease" });
+    res.status(500).json({ message: "Failed to fetch lease" });
   }
 });
 
-//Tenant accepts lease
+// PUT /api/leases/my/accept
 router.put("/my/accept", authMiddleware, async (req, res) => {
   try {
     const tenant = await Tenant.findOne({
@@ -70,14 +107,16 @@ router.put("/my/accept", authMiddleware, async (req, res) => {
     }
 
     lease.status = "active";
+    lease.isActive = true;
     await lease.save();
 
     res.json({ message: "Lease accepted successfully", lease });
   } catch (err) {
     console.error("Accept lease error:", err);
-    res.status(500).json({ error: "Failed to accept lease" });
+    res.status(500).json({ message: "Failed to accept lease" });
   }
 });
 
 module.exports = router;
+
 
