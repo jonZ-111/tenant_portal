@@ -50,6 +50,7 @@ module.exports = {
             lastName: profile.lastName,
             phone: profile.phone,
             email,
+            status: "inactive"
           },
           { transaction }
         );
