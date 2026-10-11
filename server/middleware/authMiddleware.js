@@ -3,7 +3,7 @@ const { User } = require("../models");
 
 module.exports = async (req, res, next) => {
     const token = req.cookies.token;
-
+    //Door 1: Check if token exists
     if(!token) {
         return res.status(401).json({message: 'No token provided'});
     }
