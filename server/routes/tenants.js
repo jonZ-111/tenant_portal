@@ -5,28 +5,32 @@ const authMiddleware = require("../middleware/authMiddleware");
 const { createProfile } = require("../controllers/userController");
 
 // GET /api/tenants
-router.get("/", function (req, res) {
-  console.log("GET /api/tenants HIT");
+router.get("/",authMiddleware, async (req, res) => {
+  //console.log("GET /api/tenants HIT");
+  try {
+    
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden" });
+    }
 
-  Tenant.findAll({
-    include: [
-      {
-        model: User,
-        as: "user",
-        attributes: [
-        "mustChangePassword",
-        "passwordChangedAt"
-        ]
-      }
-    ]
-  })
-    .then((tenants) => {
-      res.json(tenants);
-    })
-    .catch((err) => {
-      console.error(" Fetch tenants error:", err);
-      res.status(500).json({ error: "Failed to fetch tenants" });
+    const tenants = await Tenant.findAll({
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: [
+          "mustChangePassword",
+          "passwordChangedAt"
+          ]
+        }
+      ]
     });
+
+    res.json(tenants);
+  } catch (err) {
+    console.error("Fetch tenants error:", err);
+    res.status(500).json({ error: "Failed to fetch tenants" });
+  }
 });
 
 // POST /api/tenants
@@ -46,8 +50,13 @@ router.post("/", authMiddleware, async (req, res) => {
 
 
 // DELETE /api/tenants/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
+    
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     const tenant = await Tenant.findByPk(req.params.id);
 
     if (!tenant) {
@@ -58,15 +67,13 @@ router.delete("/:id", async (req, res) => {
     //Delete Tenant First
     await tenant.destroy();
     //Delete associated user next
-    const { User } = require("../models");
     await User.destroy({ where: { id: userId } });
 
-    res.json({ message: "User deleted" });
+    res.json({ message: "Tenant User Deleted", id: req.params.id });
   } catch (err) {
     console.error("Delete tenant error:", err);
     res.status(500).json({ error: "Failed to delete tenant" });
   }
 });
-
 
 module.exports = router;
