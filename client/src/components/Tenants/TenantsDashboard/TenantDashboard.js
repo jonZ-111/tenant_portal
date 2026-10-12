@@ -113,7 +113,7 @@ export default function TenantDashboard() {
           announcements.map((a) => (
             <div key={a.id} className="announcement">
               <strong>{a.title}</strong>
-              <p>{a.content}</p>
+              <p>{a.message}</p>
               <small>{new Date(a.createdAt).toLocaleDateString()}</small>
             </div>
           ))
