@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
+const  requireRole = require( "../middleware/requireRole");
 
 const db = require("../models");
 const Announcement = db.Announcement;
@@ -8,7 +9,7 @@ const Announcement = db.Announcement;
 
  // ADMIN — Create announcement
 
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/", authMiddleware, requireRole("admin"), async (req, res) => {
   try {
     const { title, message } = req.body;
 

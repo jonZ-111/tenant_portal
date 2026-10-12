@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
+const requireRole = require("../middleware/requireRole");
 
 const db = require("../models");
 const { Op } = require("sequelize");
@@ -10,7 +11,7 @@ const Lease = db.Lease;
 const Payment = db.Payment;
 const Ticket = db.MaintenanceTicket;
 
-router.get("/stats", authMiddleware, async (req, res) => {
+router.get("/stats", authMiddleware, requireRole("admin"), async (req, res) => {
   try {
     const totalTenants = await Tenant.count();
 
