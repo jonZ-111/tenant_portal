@@ -14,7 +14,6 @@ module.exports = {
           "email",
           "password",
           "role",
-          "tempPassword",
           "mustChangePassword",
           "passwordChangedAt",
         ],

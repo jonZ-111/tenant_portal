@@ -1,8 +1,9 @@
 const bcrypt = require('bcrypt');
 const { sequelize, User, Tenant } = require('../models');
+const crypto = require('crypto');
 
 function generateTempPassword() {
-  return Math.random().toString(36).slice(-10);
+  return crypto.randomBytes(9).toString("base64url");
 }
 
 module.exports = {
@@ -32,9 +33,8 @@ module.exports = {
           email,
           password: hashedPassword,
           role,
-          tempPassword: rawPassword,       
-          mustChangePassword: true,          
-          passwordChangedAt: null, 
+          mustChangePassword: true,
+          passwordChangedAt: null,
         },
         { transaction }
       );
